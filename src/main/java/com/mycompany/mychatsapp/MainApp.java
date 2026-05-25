@@ -112,6 +112,103 @@ public class MainApp {
         String loginMessage = login.returnLoginStatus(loggedIn);
 
         System.out.println(loginMessage);
+      // ===================== PART 2 STARTS HERE =====================
 
-      }
+if (loggedIn) {
+
+    System.out.println("\n=== WELCOME TO CHATAPP ===");
+
+    boolean running = true;
+
+    // Array to store messages
+    String[] sentMessages = new String[100];
+    int messageCount = 0;
+
+    // While loop menu
+    while (running) {
+
+        System.out.println("\n===== CHAT MENU =====");
+        System.out.println("1. Send Messages");
+        System.out.println("2. Show recently sent messages");
+        System.out.println("3. Quit");
+
+        System.out.print("Choose an option: ");
+
+        int choice = input.nextInt();
+        input.nextLine();
+
+        switch (choice) {
+
+            case 1:
+
+                System.out.print("How many messages: ");
+                int numMessages = input.nextInt();
+                input.nextLine();
+
+                for (int i = 0; i < numMessages; i++) {
+
+                    int messageNumber = i + 1;
+
+                    System.out.println("\nMessage " + messageNumber);
+
+                    System.out.print("Enter recipient number: ");
+                    String recipient = input.nextLine();
+
+                    System.out.print("Enter your message: ");
+                    String message = input.nextLine();
+
+                    // Store message
+                    sentMessages[messageCount] =
+                            "Recipient: " + recipient +
+                            " | Message: " + message;
+
+                    messageCount++;
+
+                    System.out.println("Message sent successfully.");
+                }
+
+                break;
+
+            case 2:
+
+                // Show recently sent messages
+                if (messageCount == 0) {
+
+                    System.out.println("No messages sent yet.");
+
+                } else {
+
+                    System.out.println("\n=== RECENTLY SENT MESSAGES ===");
+
+                    for (int i = 0; i < messageCount; i++) {
+
+                        System.out.println((i + 1) + ". " + sentMessages[i]);
+                    }
+                }
+
+                break;
+
+            case 3:
+
+                System.out.println("Logging out...");
+                running = false;
+
+                break;
+
+            default:
+
+                System.out.println("Invalid option. Try again.");
+        }
+    }
+
+} else {
+
+    // Print failure and exit
+    System.out.println("Login failed. Exiting ChatApp.");
 }
+
+input.close();
+}
+}
+      
+
