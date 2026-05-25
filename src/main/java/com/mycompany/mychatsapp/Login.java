@@ -4,92 +4,131 @@
  */
 package com.mycompany.mychatsapp;
 
-/**
- *
- * @author user 1
- */
 public class Login {
-   String username;
-    String password;
-    String phoneNumber;
-    
-    public boolean checkUserName(String username){
-        
-        // Check if username contains underscore and length <= 5
-        if(!username.contains("_")) {
+
+    // Variables to store registered user details
+    private String storedUsername;
+    private String storedPassword;
+
+    //===================================
+    // USERNAME VALIDATION
+    // Username must:
+    // - contain "_"
+    // - be 5 characters or less
+    //===================================
+
+    public boolean checkUserName(String username) {
+
+        return username != null
+                && !username.isEmpty()
+                && username.contains("_")
+                && username.length() <= 5;
+    }
+
+    //===================================
+    // PASSWORD VALIDATION
+    // Password must:
+    // - be at least 8 characters
+    // - contain a capital letter
+    // - contain a number
+    // - contain a special character
+    //===================================
+
+    public boolean checkPasswordComplexity(String password) {
+
+        if (password == null || password.length() < 8) {
             return false;
         }
-        return username.length() <= 5;
-    }  
-    
-    public boolean checkPasswordComplexity(String password){
-        
+
         boolean hasCapital = false;
         boolean hasNumber = false;
         boolean hasSpecial = false;
-     
-        for (int i = 0; i < password.length(); i++) {
-            
-            char ch = password.charAt(i);
-         
-            // Correct checks
+
+        for (char ch : password.toCharArray()) {
+
             if (Character.isUpperCase(ch)) {
                 hasCapital = true;
-            } 
-            else if (Character.isDigit(ch)) {
+            }
+
+            if (Character.isDigit(ch)) {
                 hasNumber = true;
-            } 
-            else if (!Character.isLetterOrDigit(ch)) {
+            }
+
+            if (!Character.isLetterOrDigit(ch)) {
                 hasSpecial = true;
             }
         }
-        
-        return password.length() >= 8 && hasCapital && hasNumber && hasSpecial;
+
+        return hasCapital && hasNumber && hasSpecial;
     }
 
-    public boolean checkCellPhoneNumber(String phone){
-        return phone.startsWith("+27") && phone.length() == 12;
-    } 
-    
-    public String registerUser(String username, String password, String phoneNumber){
-        
-        if (!checkUserName(username)){
+    //===================================
+    // PHONE NUMBER VALIDATION
+    // Must:
+    // - start with +27
+    // - be exactly 12 characters
+    //===================================
+
+    public boolean checkCellPhoneNumber(String phoneNumber) {
+
+        return phoneNumber != null
+                && phoneNumber.startsWith("+27")
+                && phoneNumber.length() == 12
+                && phoneNumber.matches("\\+27\\d{9}");
+    }
+
+    //===================================
+    // REGISTER USER
+    //===================================
+
+    public String registerUser(String username,
+                               String password,
+                               String phoneNumber) {
+
+        if (!checkUserName(username)) {
+
             return "Username must contain an underscore and be no more than 5 characters long";
         }
-        
-        if(!checkPasswordComplexity(password)){
+
+        if (!checkPasswordComplexity(password)) {
+
             return "Password must be at least 8 characters, include a capital letter, number, and special character";
-        } 
-        
-        if (!checkCellPhoneNumber(phoneNumber)){
+        }
+
+        if (!checkCellPhoneNumber(phoneNumber)) {
+
             return "Phone number must start with +27 and be exactly 12 characters long";
         }
-        
-        this.username = username;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        
+
+        // Store user details
+        storedUsername = username;
+        storedPassword = password;
+
         return "User registered successfully";
     }
 
-    // Fixed method (removed extra parameter)
-    public boolean loginUser(String username, String password){
-        return this.username.equals(username) && this.password.equals(password);
+    //===================================
+    // LOGIN USER
+    //===================================
+
+    public boolean loginUser(String username, String password) {
+
+        return storedUsername != null
+                && storedPassword != null
+                && storedUsername.equals(username)
+                && storedPassword.equals(password);
     }
 
-    public String returnLoginStatus(boolean success){
-        if(success){
-            return "Welcome " + username + ", it is great to see you again.";
-        } else {
-            return "Username or password incorrect, please try again";
+    //===================================
+    // RETURN LOGIN STATUS
+    //===================================
+
+    public String returnLoginStatus(boolean status) {
+
+        if (status) {
+            return "Login successful";
         }
+
+        return "Username or password incorrect, please try again";
     }
-
-
-    String registerUser() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-
 }
-
