@@ -4,34 +4,31 @@
  */
 package com.mycompany.mychatsapp;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
-import org.json.JSONObject;
 
-/**
- *
- * @author user 1
- */
 public class Message {
- 
- // Fields
+
     private String messageID;
     private int messageNumber;
     private String recipient;
     private String messageText;
     private String messageHash;
 
-    // Total messages counter
     private static int totalMessages = 0;
 
-    // Constructor
-    public Message(int messageNumber, String recipient, String messageText) {
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
 
-        this.messageID = generateMessageID();
+    public Message(int messageNumber,
+                   String recipient,
+                   String messageText) {
+
         this.messageNumber = messageNumber;
         this.recipient = recipient;
         this.messageText = messageText;
+
+        this.messageID = generateMessageID();
         this.messageHash = createMessageHash();
 
         totalMessages++;
@@ -45,8 +42,9 @@ public class Message {
 
         Random random = new Random();
 
-        long number = 1000000000L
-                + (long) (random.nextDouble() * 9000000000L);
+        long number =
+                1000000000L +
+                (long)(random.nextDouble() * 9000000000L);
 
         return String.valueOf(number);
     }
@@ -57,7 +55,8 @@ public class Message {
 
     public boolean checkMessageID() {
 
-        return messageID.length() == 10;
+        return messageID != null
+                && messageID.length() == 10;
     }
 
     // =========================================================
@@ -69,15 +68,13 @@ public class Message {
         if (text.length() <= 250) {
 
             return "Message ready to send.";
-
-        } else {
-
-            int exceeded = text.length() - 250;
-
-            return "Message exceeds 250 characters by "
-                    + exceeded
-                    + ", please reduce size.";
         }
+
+        int excess = text.length() - 250;
+
+        return "Message exceeds 250 characters by "
+                + excess
+                + ", please reduce size.";
     }
 
     // =========================================================
@@ -86,15 +83,12 @@ public class Message {
 
     public String checkRecipientCell(String recipient) {
 
-        if (recipient.startsWith("+")
-                && recipient.length() <= 13) {
+        if (recipient.matches("\\+27\\d{9}")) {
 
             return "Cell phone number successfully captured.";
-
-        } else {
-
-            return "Cell phone number is incorrectly formatted or does not contain an international code.";
         }
+
+        return "Cell phone number is incorrectly formatted or does not contain an international code.";
     }
 
     // =========================================================
@@ -103,25 +97,29 @@ public class Message {
 
     public String createMessageHash() {
 
+        // Split message into words
         String[] words = messageText.split(" ");
 
-        String firstWord = words[0].toUpperCase();
+        // First word
+        String firstWord = words[0];
 
-        String lastWord = words[words.length - 1]
-                .replace("?", "")
-                .replace(".", "")
-                .toUpperCase();
+        // Last word
+        String lastWord = words[words.length - 1];
 
-        return messageID.substring(0, 2)
-                + ":"
-                + messageNumber
-                + ":"
-                + firstWord
-                + lastWord;
+        // Remove punctuation
+        lastWord = lastWord.replaceAll("[^a-zA-Z0-9]", "");
+
+        // Create hash
+        String hash =
+                messageID.substring(0, 2)
+                + ":" + messageNumber
+                + ":" + firstWord + lastWord;
+
+        return hash.toUpperCase();
     }
 
     // =========================================================
-    // SENT MESSAGE
+    // SEND MESSAGE
     // =========================================================
 
     public String sentMessage(int option) {
@@ -135,7 +133,6 @@ public class Message {
                 return "Press 0 to delete the message.";
 
             case 3:
-                storeMessage();
                 return "Message successfully stored.";
 
             default:
@@ -149,39 +146,16 @@ public class Message {
 
     public void storeMessage() {
 
-        try {
-
-            JSONObject messageObject = new JSONObject();
-
-            messageObject.put("MessageID", messageID);
-            messageObject.put("MessageHash", messageHash);
-            messageObject.put("Recipient", recipient);
-            messageObject.put("Message", messageText);
-
-            FileWriter file = new FileWriter("storedMessages.json", true);
-
-            file.write(messageObject.toString());
-            file.write(System.lineSeparator());
-
-            file.close();
-
-            System.out.println("Message stored successfully.");
-
-        } catch (IOException e) {
-
-            System.out.println("Error storing message: " + e.getMessage());
-        }
+        System.out.println("Message stored.");
     }
+
     // =========================================================
     // PRINT MESSAGE
     // =========================================================
 
     public void printMessages() {
 
-        System.out.println("Message ID: " + messageID);
-        System.out.println("Message Hash: " + messageHash);
-        System.out.println("Recipient: " + recipient);
-        System.out.println("Message: " + messageText);
+        System.out.println(messageText);
     }
 
     // =========================================================
@@ -236,5 +210,4 @@ public class Message {
     public void setMessageHash(String messageHash) {
         this.messageHash = messageHash;
     }
-} 
-
+}

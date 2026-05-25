@@ -112,6 +112,7 @@ public class MainApp {
         String loginMessage = login.returnLoginStatus(loggedIn);
 
         System.out.println(loginMessage);
+        
       // ===================== PART 2 STARTS HERE =====================
 
 if (loggedIn) {
