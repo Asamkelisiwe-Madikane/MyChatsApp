@@ -5,6 +5,9 @@
 package com.mycompany.mychatsapp;
 
 import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.json.JSONObject;
 
 public class Message {
 
@@ -119,12 +122,13 @@ public String createMessageHash() {
     String[] words =
             messageText.trim().split("\\s+");
 
-    String firstWord =
-            words[0];
+   String firstWord =
+        words[0]
+                .replaceAll("[^a-zA-Z0-9]", "");
 
-    String lastWord =
-            words[words.length - 1]
-                    .replaceAll("[^a-zA-Z0-9]", "");
+String lastWord =
+        words[words.length - 1]
+                .replaceAll("[^a-zA-Z0-9]", "");
 
     String hash =
             messageID.substring(0, 2)
@@ -164,28 +168,46 @@ public String sentMessage(int option) {
 // STORE MESSAGE
 // =========================================================
 
+/**
+ * Uses org.json library to store messages in JSON format.
+ */
 public void storeMessage() {
 
-    System.out.println(
-            "Message stored for later use."
-    );
+    JSONObject jsonMessage = new JSONObject();
+
+    jsonMessage.put("messageID", messageID);
+    jsonMessage.put("messageNumber", messageNumber);
+    jsonMessage.put("recipient", recipient);
+    jsonMessage.put("messageText", messageText);
+    jsonMessage.put("messageHash", messageHash);
+
+    try (FileWriter writer =
+                 new FileWriter("messages.json", true)) {
+
+        writer.write(jsonMessage.toString());
+        writer.write(System.lineSeparator());
+
+    } catch (IOException e) {
+
+        System.out.println(
+                "Error storing message: "
+                        + e.getMessage()
+        );
+    }
 }
 
 // =========================================================
 // PRINT MESSAGE DETAILS
 // =========================================================
 
-public void printMessages() {
+public String printMessages() {
+   
 
-    System.out.println("\n==============================");
-    System.out.println("MESSAGE DETAILS");
-    System.out.println("==============================");
-    System.out.println("Message ID      : " + messageID);
-    System.out.println("Message Number  : " + messageNumber);
-    System.out.println("Recipient       : " + recipient);
-    System.out.println("Message Hash    : " + messageHash);
-    System.out.println("Message Text    : " + messageText);
-    System.out.println("==============================");
+    return
+            "Message ID: " + messageID +
+            "\nMessage Hash: " + messageHash +
+            "\nRecipient: " + recipient +
+            "\nMessage: " + messageText;
 }
 
 // =========================================================
