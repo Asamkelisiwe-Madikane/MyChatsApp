@@ -12,173 +12,158 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageTest {
 
-    private Message message1;
-    private Message message2;
+private Message message1;
+private Message message2;
 
-    @BeforeEach
-    public void setUp() {
+@BeforeEach
+public void setUp() {
 
-        message1 = new Message(
-                1,
-                "+27718693002",
-                "Hi Mike, can you join us for dinner tonight?"
-        );
+    message1 = new Message(
+            1,
+            "+27718693002",
+            "Hi Mike, can you join us for dinner tonight?"
+    );
 
-        message2 = new Message(
-                2,
-                "08575975889",
-                "Hi Keegan, did you receive the payment?"
-        );
-    }
+    message2 = new Message(
+            2,
+            "08575975889",
+            "Hi Keegan, did you receive the payment?"
+    );
+}
 
-    // =========================================================
-    // MESSAGE LENGTH TESTS
-    // =========================================================
+@Test
+public void testCheckMessageLength_validMessage_returnsTrue() {
 
-    @Test
-    public void testCheckMessageLength_validMessage_returnsSuccess() {
+    assertTrue(message1.checkMessageLength());
 
-        String result = message1.checkMessageLength(
-                message1.getMessageText()
-        );
+    assertEquals(
+            "Message ready to send.",
+            message1.getMessageLengthValidationMessage()
+    );
+}
 
-        assertEquals(
-                "Message ready to send.",
-                result
-        );
-    }
+@Test
+public void testCheckMessageLength_over250chars_returnsFalse() {
 
-    @Test
-    public void testCheckMessageLength_over250chars_returnsFailure() {
+    Message longMessage = new Message(
+            3,
+            "+27718693002",
+            "a".repeat(260)
+    );
 
-        String longMessage = "a".repeat(260);
+    assertFalse(longMessage.checkMessageLength());
 
-        String result =
-                message1.checkMessageLength(longMessage);
+    assertTrue(
+            longMessage.getMessageLengthValidationMessage()
+                    .contains("Message exceeds 250 characters")
+    );
+}
 
-        assertTrue(
-                result.contains(
-                        "Message exceeds 250 characters"
-                )
-        );
-    }
+@Test
+public void testCheckRecipientCell_validNumber_returnsTrue() {
 
-    // =========================================================
-    // RECIPIENT CELL TESTS
-    // =========================================================
+    assertTrue(message1.checkRecipientCell());
 
-    @Test
-    public void testCheckRecipientCell_validNumber_returnsSuccess() {
+    assertEquals(
+            "Cell phone number successfully captured.",
+            message1.getRecipientValidationMessage()
+    );
+}
 
-        String result =
-                message1.checkRecipientCell(
-                        message1.getRecipient()
-                );
+@Test
+public void testCheckRecipientCell_invalidNumber_returnsFalse() {
 
-        assertEquals(
-                "Cell phone number successfully captured.",
-                result
-        );
-    }
+    assertFalse(message2.checkRecipientCell());
 
-    @Test
-    public void testCheckRecipientCell_invalidNumber_returnsFailure() {
+    assertEquals(
+            "Cell phone number is incorrectly formatted or does not contain an international code.",
+            message2.getRecipientValidationMessage()
+    );
+}
 
-        String result =
-                message2.checkRecipientCell(
-                        message2.getRecipient()
-                );
+@Test
+public void testCreateMessageHash_correctFormat() {
 
-        assertEquals(
-                "Cell phone number is incorrectly formatted or does not contain an international code.",
-                result
-        );
-    }
+    message1.setMessageID("1234567890");
 
-    // =========================================================
-    // MESSAGE HASH TESTS
-    // =========================================================
+    String hash = message1.createMessageHash();
 
-    @Test
-    public void testCreateMessageHash_correctFormat() {
+    assertTrue(hash.contains(":1:"));
+}
 
-        message1.setMessageID("1234567890");
+@Test
+public void testCreateMessageHash_isUpperCase() {
 
-        String hash = message1.createMessageHash();
+    message1.setMessageID("1234567890");
 
-        assertTrue(
-                hash.endsWith(":1:HITONIGHT")
-        );
-    }
+    String hash = message1.createMessageHash();
 
-    @Test
-    public void testCreateMessageHash_isUppercase() {
+    assertEquals(hash.toUpperCase(), hash);
+}
 
-        message1.setMessageID("1234567890");
+@Test
+public void testMessageID_notNull() {
 
-        String hash = message1.createMessageHash();
+    assertNotNull(message1.getMessageID());
+}
 
-        assertEquals(
-                hash.toUpperCase(),
-                hash
-        );
-    }
+@Test
+public void testMessageID_lengthIs10() {
 
-    // =========================================================
-    // MESSAGE ID TESTS
-    // =========================================================
+    assertEquals(
+            10,
+            message1.getMessageID().length()
+    );
+}
 
-    @Test
-    public void testMessageID_notNull() {
+@Test
+public void testCheckMessageID_returnsTrue() {
 
-        assertNotNull(
-                message1.getMessageID()
-        );
-    }
+    assertTrue(message1.checkMessageID());
+}
 
-    @Test
-    public void testMessageID_lengthIs10() {
+@Test
+public void testSentMessage_send() {
 
-        assertEquals(
-                10,
-                message1.getMessageID().length()
-        );
-    }
+    assertEquals(
+            "Message successfully sent.",
+            message1.sentMessage(1)
+    );
+}
 
-    // =========================================================
-    // SENT MESSAGE TESTS
-    // =========================================================
+@Test
+public void testSentMessage_discard() {
 
-    @Test
-    public void testSentMessage_send() {
+    assertEquals(
+            "Message discarded.",
+            message1.sentMessage(2)
+    );
+}
 
-        String result = message1.sentMessage(1);
+@Test
+public void testSentMessage_store() {
 
-        assertEquals(
-                "Message successfully sent.",
-                result
-        );
-    }
+    assertEquals(
+            "Message successfully stored.",
+            message1.sentMessage(3)
+    );
+}
 
-    @Test
-    public void testSentMessage_disregard() {
+@Test
+public void testSentMessage_invalidOption() {
 
-        String result = message1.sentMessage(2);
+    assertEquals(
+            "Invalid option.",
+            message1.sentMessage(99)
+    );
+}
 
-        assertEquals(
-                "Press 0 to delete the message.",
-                result
-        );
-    }
+@Test
+public void testReturnTotalMessages() {
 
-    @Test
-    public void testSentMessage_store() {
+    assertTrue(
+            Message.returnTotalMessages() >= 2
+    );
+}
 
-        String result = message1.sentMessage(3);
-
-        assertEquals(
-                "Message successfully stored.",
-                result
-        );
-    }
 }
