@@ -4,156 +4,113 @@
  */
 
 import com.mycompany.mychatsapp.Login;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author user 1
- */
 public class LoginTest {
 
-    public LoginTest() {
-    }
-
-    @BeforeAll
-    public static void setUpClass() {
-    }
-
-    @AfterAll
-    public static void tearDownClass() {
-    }
-
-    @BeforeEach
-    public void setUp() {
-    }
-
-    @AfterEach
-    public void tearDown() {
-    }
-
-    /**
-     * Test of checkUserName method, of class Login.
-     */
     @Test
-    public void testCheckUserName() {
-        System.out.println("checkUserName");
+    public void testCheckUserName_Valid() {
 
-        String username = "";
-        Login instance = new Login();
+        Login login = new Login();
 
-        boolean expResult = false;
-        boolean result = instance.checkUserName(username);
-
-        assertEquals(expResult, result);
+        assertTrue(login.checkUserName("abc_1"));
     }
 
-    /**
-     * Test of checkPasswordComplexity method, of class Login.
-     */
     @Test
-    public void testCheckPasswordComplexity() {
-        System.out.println("checkPasswordComplexity");
+    public void testCheckUserName_Invalid() {
 
-        String password = "";
-        Login instance = new Login();
+        Login login = new Login();
 
-        boolean expResult = false;
-        boolean result = instance.checkPasswordComplexity(password);
-
-        assertEquals(expResult, result);
+        assertFalse(login.checkUserName("abcdef"));
     }
 
-    /**
-     * Test of checkCellPhoneNumber method, of class Login.
-     */
     @Test
-    public void testCheckCellPhoneNumber() {
-        System.out.println("checkCellPhoneNumber");
+    public void testCheckPasswordComplexity_Valid() {
 
-        String phone = "";
-        Login instance = new Login();
+        Login login = new Login();
 
-        boolean expResult = false;
-        boolean result = instance.checkCellPhoneNumber(phone);
-
-        assertEquals(expResult, result);
+        assertTrue(login.checkPasswordComplexity("Password@1"));
     }
 
-    /**
-     * Test of registerUser method, of class Login.
-     */
+    @Test
+    public void testCheckPasswordComplexity_Invalid() {
+
+        Login login = new Login();
+
+        assertFalse(login.checkPasswordComplexity("password"));
+    }
+
+    @Test
+    public void testCheckCellPhoneNumber_Valid() {
+
+        Login login = new Login();
+
+        assertTrue(login.checkCellPhoneNumber("+27831234567"));
+    }
+
+    @Test
+    public void testCheckCellPhoneNumber_Invalid() {
+
+        Login login = new Login();
+
+        assertFalse(login.checkCellPhoneNumber("0831234567"));
+    }
+
     @Test
     public void testRegisterUser() {
-        System.out.println("registerUser");
 
-        String username = "";
-        String password = "";
-        String phoneNumber = "";
+        Login login = new Login();
 
-        Login instance = new Login();
+        String result =
+                login.registerUser(
+                        "abc_1",
+                        "Password@1",
+                        "+27831234567"
+                );
 
-        String expResult = "";
-        String result = instance.registerUser(username, password, phoneNumber);
-
-        assertEquals(expResult, result);
+        assertNotNull(result);
     }
 
-    /**
-     * Test of loginUser method, of class Login.
-     */
     @Test
     public void testLoginUser() {
-        System.out.println("loginUser");
 
-        String username = "";
-        String password = "";
+        Login login = new Login();
 
-        Login instance = new Login();
+        login.registerUser(
+                "abc_1",
+                "Password@1",
+                "+27831234567"
+        );
 
-        boolean expResult = false;
-        boolean result = instance.loginUser(username, password);
+        boolean result =
+                login.loginUser(
+                        "abc_1",
+                        "Password@1"
+                );
 
-        assertEquals(expResult, result);
+        assertTrue(result);
     }
 
-    /**
-     * Test of returnLoginStatus method, of class Login.
-     */
     @Test
-    public void testReturnLoginStatus() {
-        System.out.println("returnLoginStatus");
+    public void testReturnLoginStatus_Success() {
 
-        boolean success = false;
+        Login login = new Login();
 
-        Login instance = new Login();
+        String result =
+                login.returnLoginStatus(true);
 
-        String expResult = "";
-        String result = instance.returnLoginStatus(success);
-
-        assertEquals(expResult, result);
+        assertNotNull(result);
     }
 
-    /**
-     * Test of registerUser method, of class Login.
-     */
     @Test
-    public void testRegisterUser_3args() {
-        System.out.println("registerUser");
+    public void testReturnLoginStatus_Failure() {
 
-        String username = "";
-        String password = "";
-        String phoneNumber = "";
+        Login login = new Login();
 
-        Login instance = new Login();
+        String result =
+                login.returnLoginStatus(false);
 
-        String expResult = "";
-        String result = instance.registerUser(username, password, phoneNumber);
-
-        assertEquals(expResult, result);
+        assertNotNull(result);
     }
 }
