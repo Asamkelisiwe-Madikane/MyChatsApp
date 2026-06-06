@@ -15,9 +15,9 @@ public class MainApp {
 
         Login login = new Login();
 
-        // =====================================================
+        // =====================================
         // REGISTRATION
-        // =====================================================
+        // =====================================
 
         System.out.println("=== USER REGISTRATION ===");
 
@@ -87,40 +87,54 @@ public class MainApp {
             }
         }
 
-        String response = login.registerUser(username, password, phone);
+        String response =
+                login.registerUser(
+                        username,
+                        password,
+                        phone
+                );
 
         System.out.println(response);
 
-        // =====================================================
+        // =====================================
         // LOGIN
-        // =====================================================
+        // =====================================
 
         System.out.println("\n=== USER LOGIN ===");
 
         System.out.print("Enter username: ");
-        String loginUsername = input.nextLine();
+        String loginUsername =
+                input.nextLine();
 
         System.out.print("Enter password: ");
-        String loginPassword = input.nextLine();
+        String loginPassword =
+                input.nextLine();
 
         boolean loggedIn =
-                login.loginUser(loginUsername, loginPassword);
+                login.loginUser(
+                        loginUsername,
+                        loginPassword
+                );
 
         System.out.println(
                 login.returnLoginStatus(loggedIn)
         );
 
-        // =====================================================
-        // CHAT APP
-        // =====================================================
+        // =====================================
+        // PART 3 STARTS HERE
+        // =====================================
 
         if (loggedIn) {
 
-            System.out.println("\nWelcome to ChatApp");
+            // Load stored messages from JSON
+            Message.loadStoredMessages();
+
+            System.out.println(
+                    "\nWelcome to QuickChat"
+            );
 
             boolean running = true;
 
-            // REQUIRED BY FEEDBACK
             ArrayList<Message> messages =
                     new ArrayList<>();
 
@@ -129,19 +143,23 @@ public class MainApp {
                 System.out.println("\n===== CHAT MENU =====");
                 System.out.println("1. Send Messages");
                 System.out.println("2. Show Recently Sent Messages");
-                System.out.println("3. Show Total Messages");
-                System.out.println("4. Quit");
+                System.out.println("3. Quit");
+                System.out.println("4. Stored Messages");
 
-                System.out.print("Choose an option: ");
+                System.out.print(
+                        "Choose an option: "
+                );
 
-                int choice = input.nextInt();
+                int choice =
+                        input.nextInt();
+
                 input.nextLine();
 
                 switch (choice) {
 
-                    // =========================================
+                    // =====================================
                     // SEND MESSAGES
-                    // =========================================
+                    // =====================================
 
                     case 1:
 
@@ -149,22 +167,23 @@ public class MainApp {
                                 "How many messages would you like to send? "
                         );
 
-                        int numMessages = input.nextInt();
+                        int numMessages =
+                                input.nextInt();
+
                         input.nextLine();
 
-                        for (int i = 0; i < numMessages; i++) {
+                        for (int i = 0;
+                             i < numMessages;
+                             i++) {
 
-                            int messageNumber = i + 1;
+                            int messageNumber =
+                                    i + 1;
 
                             System.out.println(
                                     "\n========== MESSAGE "
                                             + messageNumber
                                             + " =========="
                             );
-
-                            // ------------------------------
-                            // VALIDATE RECIPIENT
-                            // ------------------------------
 
                             String recipient;
 
@@ -174,7 +193,8 @@ public class MainApp {
                                         "Enter recipient number (+27xxxxxxxxx): "
                                 );
 
-                                recipient = input.nextLine();
+                                recipient =
+                                        input.nextLine();
 
                                 Message temp =
                                         new Message(
@@ -198,10 +218,6 @@ public class MainApp {
                                     );
                                 }
                             }
-
-                            // ------------------------------
-                            // VALIDATE MESSAGE LENGTH
-                            // ------------------------------
 
                             String messageText;
 
@@ -237,10 +253,6 @@ public class MainApp {
                                 }
                             }
 
-                            // ------------------------------
-                            // CREATE MESSAGE OBJECT
-                            // ------------------------------
-
                             Message msg =
                                     new Message(
                                             messageNumber,
@@ -249,10 +261,6 @@ public class MainApp {
                                     );
 
                             messages.add(msg);
-
-                            // ------------------------------
-                            // SEND OPTIONS
-                            // ------------------------------
 
                             System.out.println(
                                     "\nChoose Message Option"
@@ -283,18 +291,16 @@ public class MainApp {
                                     msg.sentMessage(option)
                             );
 
-                            // ------------------------------
-                            // DISPLAY DETAILS
-                            // ------------------------------
-
-                            msg.printMessages();
+                            System.out.println(
+                                    msg.printMessages()
+                            );
                         }
 
                         break;
 
-                    // =========================================
-                    // SHOW RECENT MESSAGES
-                    // =========================================
+                    // =====================================
+                    // SHOW RECENTLY SENT
+                    // =====================================
 
                     case 2:
 
@@ -312,30 +318,19 @@ public class MainApp {
 
                             for (Message msg : messages) {
 
-                                msg.printMessages();
+                                System.out.println(
+                                        msg.printMessages()
+                                );
                             }
                         }
 
                         break;
 
-                    // =========================================
-                    // TOTAL MESSAGES
-                    // =========================================
+                    // =====================================
+                    // QUIT
+                    // =====================================
 
                     case 3:
-
-                        System.out.println(
-                                "Total Messages: "
-                                        + Message.returnTotalMessages()
-                        );
-
-                        break;
-
-                    // =========================================
-                    // QUIT
-                    // =========================================
-
-                    case 4:
 
                         running = false;
 
@@ -345,10 +340,150 @@ public class MainApp {
 
                         break;
 
+                    // =====================================
+                    // PART 3 STORED MESSAGES MENU
+                    // =====================================
+
+                    case 4:
+
+                        boolean storedMenu =
+                                true;
+
+                        while (storedMenu) {
+
+                            System.out.println(
+                                    "\n===== STORED MESSAGES ====="
+                            );
+
+                            System.out.println(
+                                    "a) Display all stored messages"
+                            );
+
+                            System.out.println(
+                                    "b) Display longest message"
+                            );
+
+                            System.out.println(
+                                    "c) Search by Message ID"
+                            );
+
+                            System.out.println(
+                                    "d) Search by Recipient"
+                            );
+
+                            System.out.println(
+                                    "e) Delete by Message Hash"
+                            );
+
+                            System.out.println(
+                                    "f) Display Full Report"
+                            );
+
+                            System.out.println(
+                                    "g) Back"
+                            );
+
+                            System.out.print(
+                                    "Choice: "
+                            );
+
+                            String subChoice =
+                                    input.nextLine()
+                                            .toLowerCase();
+
+                            switch (subChoice) {
+
+                                case "a":
+
+                                    System.out.println(
+                                            Message.displayStoredMessages()
+                                    );
+
+                                    break;
+
+                                case "b":
+
+                                    System.out.println(
+                                            Message.displayLongestMessage()
+                                    );
+
+                                    break;
+
+                                case "c":
+
+                                    System.out.print(
+                                            "Enter Message ID: "
+                                    );
+
+                                    String id =
+                                            input.nextLine();
+
+                                    System.out.println(
+                                            Message.searchByMessageID(id)
+                                    );
+
+                                    break;
+
+                                case "d":
+
+                                    System.out.print(
+                                            "Enter Recipient: "
+                                    );
+
+                                    String recipientSearch =
+                                            input.nextLine();
+
+                                    System.out.println(
+                                            Message.searchByRecipient(
+                                                    recipientSearch
+                                            )
+                                    );
+
+                                    break;
+
+                                case "e":
+
+                                    System.out.print(
+                                            "Enter Message Hash: "
+                                    );
+
+                                    String hash =
+                                            input.nextLine();
+
+                                    System.out.println(
+                                            Message.deleteByHash(hash)
+                                    );
+
+                                    break;
+
+                                case "f":
+
+                                    System.out.println(
+                                            Message.printMessagesReport()
+                                    );
+
+                                    break;
+
+                                case "g":
+
+                                    storedMenu = false;
+
+                                    break;
+
+                                default:
+
+                                    System.out.println(
+                                            "Invalid option."
+                                    );
+                            }
+                        }
+
+                        break;
+
                     default:
 
                         System.out.println(
-                                "Invalid option."
+                                "Invalid menu option."
                         );
                 }
             }

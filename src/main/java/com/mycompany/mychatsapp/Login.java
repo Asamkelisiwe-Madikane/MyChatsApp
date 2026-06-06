@@ -6,7 +6,10 @@ package com.mycompany.mychatsapp;
 
 public class Login {
 
-    // Store registered user details
+    // ===================================
+    // STORED USER DETAILS
+    // ===================================
+
     private String storedUsername;
     private String storedPassword;
 
@@ -24,7 +27,8 @@ public class Login {
 
     // ===================================
     // PASSWORD VALIDATION
-    // At least 8 chars, capital, number, special char
+    // At least 8 chars, capital, number,
+    // and special character
     // ===================================
 
     public boolean checkPasswordComplexity(String password) {
@@ -52,16 +56,20 @@ public class Login {
             }
         }
 
-        return hasCapital && hasNumber && hasSpecial;
+        return hasCapital
+                && hasNumber
+                && hasSpecial;
     }
 
     // ===================================
-    // PHONE NUMBER VALIDATION
-    // Must start with +27 and contain 9 digits after
+    // CELL PHONE VALIDATION
+    // Must start with +27 and contain
+    // 9 digits after the country code
     // Example: +27831234567
     // ===================================
 
-    public boolean checkCellPhoneNumber(String phoneNumber) {
+    public boolean checkCellPhoneNumber(
+            String phoneNumber) {
 
         return phoneNumber != null
                 && phoneNumber.matches("\\+27\\d{9}");
@@ -71,26 +79,26 @@ public class Login {
     // REGISTER USER
     // ===================================
 
-    public String registerUser(String username,
-                               String password,
-                               String phoneNumber) {
+    public String registerUser(
+            String username,
+            String password,
+            String phoneNumber) {
 
         if (!checkUserName(username)) {
 
-            return "Username is not correctly formatted.";
+            return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than five characters in length.";
         }
 
         if (!checkPasswordComplexity(password)) {
 
-            return "Password is not correctly formatted.";
+            return "Password is not correctly formatted, please ensure that the password contains at least eight characters, a capital letter, a number and a special character.";
         }
 
         if (!checkCellPhoneNumber(phoneNumber)) {
 
-            return "Cell phone number incorrectly formatted.";
+            return "Cell phone number incorrectly formatted or does not contain an international code.";
         }
 
-        // Save user details
         storedUsername = username;
         storedPassword = password;
 
@@ -101,7 +109,9 @@ public class Login {
     // LOGIN USER
     // ===================================
 
-    public boolean loginUser(String username, String password) {
+    public boolean loginUser(
+            String username,
+            String password) {
 
         return storedUsername != null
                 && storedPassword != null
@@ -110,17 +120,34 @@ public class Login {
     }
 
     // ===================================
-    // LOGIN STATUS MESSAGE
+    // LOGIN STATUS
+    // PART 3 REQUIREMENT
     // ===================================
 
-    public String returnLoginStatus(boolean status) {
+    public String returnLoginStatus(
+            boolean loginStatus) {
 
-        if (status) {
+        if (loginStatus) {
 
-            return "Login successful.";
+            return "Welcome "
+                    + storedUsername
+                    + ", it is great to see you again.";
+
         } else {
 
             return "Username or password incorrect, please try again.";
         }
+    }
+
+    // ===================================
+    // GETTERS
+    // ===================================
+
+    public String getStoredUsername() {
+        return storedUsername;
+    }
+
+    public String getStoredPassword() {
+        return storedPassword;
     }
 }
