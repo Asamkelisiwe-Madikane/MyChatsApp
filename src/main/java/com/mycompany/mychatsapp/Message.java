@@ -314,30 +314,29 @@ private String messageHash;
 
     public static String searchByRecipient(String recipient) {
 
-        StringBuilder results =
-                new StringBuilder();
+    StringBuilder results = new StringBuilder();
 
-        for (int i = 0; i < recipientList.size(); i++) {
+    for (int i = 0; i < recipientList.size(); i++) {
 
-            if (recipientList.get(i)
-                    .equals(recipient)) {
+        if (recipientList.get(i).equals(recipient)) {
 
-                if (i < sentMessages.size()) {
-
-                    results.append(
-                            sentMessages.get(i)
-                    ).append("\n");
-                }
+            if (i < sentMessages.size()) {
+                results.append(sentMessages.get(i))
+                       .append("\n");
             }
         }
-
-        if (results.length() == 0) {
-
-            return "No messages found.";
-        }
-
-        return results.toString();
     }
+
+    for (String stored : storedMessages) {
+        results.append(stored).append("\n");
+    }
+
+    if (results.length() == 0) {
+        return "No messages found.";
+    }
+
+    return results.toString();
+}
 
     // =========================================================
     // PART 3
