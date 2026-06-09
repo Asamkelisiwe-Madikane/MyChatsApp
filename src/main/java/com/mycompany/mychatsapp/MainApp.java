@@ -380,7 +380,7 @@ public class MainApp {
                             );
 
                             System.out.println(
-                                    "g) Back"
+                                    "g) Return to main menu"
                             );
 
                             System.out.print(

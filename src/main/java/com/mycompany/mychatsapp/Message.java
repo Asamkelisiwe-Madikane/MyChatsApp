@@ -16,15 +16,33 @@ import org.json.JSONObject;
 
 public class Message {
 
-    static boolean displayStoredMessages() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // =========================================================
+    // PART 3
+    // DISPLAY ALL STORED MESSAGES
+    // =========================================================
+
+    public static String displayStoredMessages() {
+
+        if (storedMessages.isEmpty()) {
+            return "No stored messages found.";
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (String message : storedMessages) {
+
+            result.append(message)
+                  .append("\n");
+        }
+
+        return result.toString();
     }
 
- private String messageID;
-private int messageNumber;
-private String recipient;
-private String messageText;
-private String messageHash;
+    private String messageID;
+    private int messageNumber;
+    private String recipient;
+    private String messageText;
+    private String messageHash;
     private static int totalMessages = 0;
 
     // =========================================================
@@ -312,7 +330,7 @@ private String messageHash;
     // SEARCH BY RECIPIENT
     // =========================================================
 
-    public static String searchByRecipient(String recipient) {
+   public static String searchByRecipient(String recipient) {
 
     StringBuilder results = new StringBuilder();
 
@@ -321,14 +339,11 @@ private String messageHash;
         if (recipientList.get(i).equals(recipient)) {
 
             if (i < sentMessages.size()) {
+
                 results.append(sentMessages.get(i))
                        .append("\n");
             }
         }
-    }
-
-    for (String stored : storedMessages) {
-        results.append(stored).append("\n");
     }
 
     if (results.length() == 0) {
